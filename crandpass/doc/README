@@ -1,0 +1,44 @@
+PROJECT: crandpass
+DESCRIPTION: create random passwords
+VESRION: 6
+AUTHOR: Faolan Baldwin <faolan.baldwin@gmail.com>
+LICENSE: GPL 3. (C) 2013.
+
+DEPENDENCIES:
+bash, coreutils
+
+INSTALLATION:
+Run "./install.sh"
+Or you can dump it in $HOME/bin if your $PATH is set to include it.
+
+REMOVE:
+Run "./install.sh -r"
+
+PACKAGE:
+Run "./package.sh"
+
+This will run the rpmbuild environment in your current users home directory. Do not use this tool unless you know how to use and debug RPM packaging tools. If you wish to install the package, please install it from your distro's repositories or obtain it from the official website.
+
+HOW TO USE:
+Usage: crandpass -c 1 -l 32 -s random
+  -h   print this help message
+  -A   alphabetic characters options:
+      0  x  exlude       exclude letters
+      1  l  lower        use only lowercase
+      2  u  upper        use only uppercase
+      3  m  mix          use mixed case (default)
+  -c   number of passwords to create (default: 1)
+  -H   create hexadecimal passwords
+      1  l  lower        use lowercase
+      2  u  upper        use uppercase
+  -l   length of passwords (default: 32)
+  -N   numerical character options:
+      0  x  exclude      exclude numbers
+      1  i  include      include numbers (default)
+  -s   source of the passwords (default: random)
+      r  random          use /dev/random
+      u  urandom         use /dev/urandom
+  -S   symbol character options:
+      0  x  exclude      exclude symbols (default)
+      1  i  include      include symbols
+  -v   print version number

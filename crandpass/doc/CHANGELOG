@@ -1,0 +1,13 @@
+VERSION 6: 20130828
+  * BUGFIX: "crandpass -A0 -N0 -S0" runs the random number generator indefinitely which causes entropy to run out.  Fixed so that when this command is issued it produces an error.
+VERSION 5: 20130803
+  * ADDED spec file for rpm package creation.
+  * CHANGED file structure of project folder.
+  * CHANGED README file is now up to date.
+VERSION 4: 20130802
+  * ADDED hexadecimal password creation options (-H)
+VERSION 3: 20130802
+  * CHANGED default passwords created to 1. This is to make the program script friendly so that it can be re-used.
+  * ADDED support for controling case
+  * ADDED support for character control: letters, numbers, and symbols can now be includued or excluded.
+  * ADDED symbol support.

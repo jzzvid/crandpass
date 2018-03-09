@@ -1,0 +1,157 @@
+#!/bin/bash
+
+# crandpass - create random password
+# An easy to use command-line password generator
+#
+# Author: Faolan Devyn Baldwin
+# Date: 02 August 2013
+
+# ERROR & MACROS
+E_NOARGS=65
+E_BADARG=66
+VERSION=6
+
+# DEFAULT VARS
+COUNT=1        # -c --count        number of passwords to print
+LENGTH=32      # -l --length       length of passwords
+SRC="random"   # -s --source       source device
+
+# FILTER VARS
+CASE="[:alpha:]"
+NUM="[:digit:]"
+SYM=""
+
+
+
+# FUNCTIONS
+usage() {
+	echo "crandpass - create random passwords"
+	echo "version $VERSION"
+	echo "Usage: $0 -c 1 -l 32 -s random"
+	echo "-h   print this help message"
+	echo "-A   alphabetic characters options:"
+	echo "   0  x  exlude       exclude letters"
+	echo "   1  l  lower        use only lowercase"
+	echo "   2  u  upper        use only uppercase"
+	echo "   3  m  mix          use mixed case (default)"
+	echo "-c   number of passwords to create (default: 1)"
+	echo "-H   create hexadecimal passwords"
+	echo "   1  l  lower        use lowercase"
+	echo "   2  u  upper        use uppercase"
+	echo "-l   length of passwords (default: 32)"
+	echo "-N   numerical character options:"
+	echo "   0  x  exclude      exclude numbers"
+	echo "   1  i  include      include numbers (default)"
+	echo "-s   source of the passwords (default: random)"
+	echo "   r  random          use /dev/random"
+	echo "   u  urandom         use /dev/urandom"
+	echo "-S   symbol character options:"
+	echo "   0  x  exclude      exclude symbols (default)"
+	echo "   1  i  include      include symbols"
+	echo "-v   print version number"
+	exit
+}
+
+version() {
+	echo "crandpass - create random passwords"
+	echo "version $VERSION"
+}
+
+# HANDLE OPTIONS
+while getopts ":hA:c:H:l:N:s:S:v" opt; do
+   case $opt in
+      (h)
+         usage
+         exit ;;
+      (c)
+         COUNT=$OPTARG ;;
+      (A)
+         case $OPTARG in
+            (x|exclude|0)
+               CASE="" ;;
+            (l|lower|1)
+               CASE="[:lower:]" ;;
+            (u|upper|2)
+               CASE="[:upper:]" ;;
+            (m|mixed|3)
+               CASE="[:alpha:]" ;;
+            (*)
+               echo "INVALID OPTION IN -C"
+               usage
+               exit ;;
+            esac ;;
+      (H)
+         case $OPTARG in
+            (l|lower|1)
+               CASE="a-f"
+               NUM="[:digit:]"
+               SYM="" ;;
+            (u|upper|2)
+               CASE="A-F"
+               NUM="[:digit:]"
+               SYM="" ;;
+            (*)
+               echo "INVALID OPTION IN -H"
+               usage
+               exit ;;
+         esac ;;
+      (l)
+         LENGTH=$OPTARG ;;
+      (N)
+         case $OPTARG in
+            (x|exclude|0)
+               NUM="" ;;
+            (i|include|1)
+               NUM="[:digit:]" ;;
+            (*)
+               echo "INVALID OPTION IN -N"
+               usage
+               exit ;;
+            esac ;;
+      (s)
+         case $OPTARG in
+            (r|random)
+               SRC="random";;
+            (u|urandom)
+               SRC="urandom" ;;
+            (*)
+               echo "INVALID OPTION IN -s"
+               usage
+               exit ;;
+            esac ;;
+      (S)
+         case $OPTARG in
+            (x|exclude|0)
+               SYM="" ;;
+            (i|include|1)
+               SYM="[:punct:]" ;;
+            (*)
+               echo "INVALID OPTION IN -S"
+               usage
+               exit ;;
+            esac ;;
+      (v)
+         version
+         exit ;;
+      (*)
+         echo "INVALID ARGUMENT"
+         usage
+         exit ;;
+      esac
+done
+
+# OUTPUT TEST
+if [[ $CASE == "" && $NUM == "" && $SYM == "" ]]
+then
+  echo "ERROR: ATTEMPT TO SUPRESS ALL OUTPUT"
+  echo "OPTION: \"-A0 -N0 -S0\" DETECTED"
+  echo ""
+  usage
+  exit
+fi
+
+# MAKE THE PASSWORDS
+cat /dev/$SRC | tr -dc "$CASE$NUM$SYM" | fold -w $LENGTH | head -n $COUNT
+
+
+exit
